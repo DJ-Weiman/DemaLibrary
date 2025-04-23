@@ -25,7 +25,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authManager;
     private final UserDetailsService userDetailsService;
 
-    @Value("${jwt.secret")
+    @Value("${jwt.secret}")
     private String secretKey;
 
     private final Long jwtExpiryMs = 86400000L;
@@ -69,6 +69,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private Key getSigningKey(){
         byte[] keyBytes = secretKey.getBytes();
+
+        System.out.println("SecretKey : " + secretKey);
+
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

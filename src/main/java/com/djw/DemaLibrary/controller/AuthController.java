@@ -5,10 +5,7 @@ import com.djw.DemaLibrary.domain.dto.LoginRequest;
 import com.djw.DemaLibrary.services.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/library/auth")
@@ -19,7 +16,6 @@ public class AuthController {
     public AuthController(AuthenticationService authService) {
         this.authService = authService;
     }
-
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest){
         UserDetails user = authService.authenticate(
