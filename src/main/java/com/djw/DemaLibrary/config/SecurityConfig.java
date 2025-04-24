@@ -10,13 +10,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -33,7 +37,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -54,27 +58,32 @@ public class SecurityConfig {
         return libraryUserDetailsService;
     }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationService authenticationService){
-        return new JwtAuthenticationFilter(authenticationService);
-    }
+//    @Bean
+//    public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationService authenticationService){
+//        return new JwtAuthenticationFilter(authenticationService);
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception{
-        http
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(HttpMethod.POST, "/library/auth/**").permitAll()
+            HttpSecurity http) throws Exception{
+       return http
+                .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(HttpMethod.POST, "/library/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/library/auth/register").permitAll()
                     .requestMatchers(HttpMethod.GET, "/library/books/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/library/books/**").permitAll()
                 )
-            .csrf(csfr -> csfr.disable())
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    //            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .oauth2ResourceServer(server -> server
+                        .jwt(Customizer.withDefaults())
+                        .authenticationEntryPoint(
+                                new BearerTokenAuthenticationEntryPoint())
+                        .accessDeniedHandler(
+                                new BearerTokenAccessDeniedHandler())
+                ).build();
     }
 
 }

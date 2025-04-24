@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,5 +38,11 @@ public class UserServiceImpl implements UserService {
                 .stream(userRepository.findAll().spliterator(), false)
                 .map(userMapper::mapTo)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<UserDto> getUserByName(String userName) {
+        Optional<UserEntity> optionalUserEntity = userRepository.findByName(userName);
+        return optionalUserEntity.map(userMapper::mapTo);
     }
 }

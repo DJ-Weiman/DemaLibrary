@@ -1,77 +1,40 @@
 package com.djw.DemaLibrary.services.impl;
 
+import com.djw.DemaLibrary.domain.AuthResponse;
 import com.djw.DemaLibrary.services.AuthenticationService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import com.djw.DemaLibrary.services.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final AuthenticationManager authManager;
-    private final UserDetailsService userDetailsService;
-
-    @Value("${jwt.secret}")
-    private String secretKey;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     private final Long jwtExpiryMs = 86400000L;
 
     @Override
-    public UserDetails authenticate(String username, String password) {
-        authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password));
+    public AuthResponse authenticate(String username, String password) {
+        final var authToken = UsernamePasswordAuthenticationToken.unauthenticated(username, password);
+        final var authentication = authenticationManager.authenticate(authToken);
 
-        return userDetailsService.loadUserByUsername(username);
+        final var token = jwtService.generateToken(username);
+
+        return new AuthResponse(token, jwtExpiryMs);
     }
 
     @Override
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiryMs))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
+        return "";
     }
 
     @Override
     public UserDetails validateToken(String token) {
-        String username = extractUsername(token);
-        return userDetailsService.loadUserByUsername(username);
-    }
-
-    private String extractUsername(String token){
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject();
-    }
-
-
-    private Key getSigningKey(){
-        byte[] keyBytes = secretKey.getBytes();
-
-        System.out.println("SecretKey : " + secretKey);
-
-        return Keys.hmacShaKeyFor(keyBytes);
+        return null;
     }
 }
