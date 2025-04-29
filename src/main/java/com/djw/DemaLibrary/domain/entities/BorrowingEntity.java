@@ -1,12 +1,20 @@
 package com.djw.DemaLibrary.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "borrowing")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class BorrowingEntity {
 
     @Id
@@ -21,20 +29,6 @@ public class BorrowingEntity {
     private LocalDateTime borrowed_at;
 
     private LocalDateTime returned_at;
-
-
-    public BorrowingEntity() {
-    }
-
-    public BorrowingEntity(UUID id, UUID user_id, UUID book_id, LocalDateTime borrowed_at, LocalDateTime returned_at) {
-        this.id = id;
-        this.user_id = user_id;
-        this.book_id = book_id;
-        this.borrowed_at = borrowed_at;
-        this.returned_at = returned_at;
-    }
-
-
 
     @PreUpdate
     protected void onUpdate(){

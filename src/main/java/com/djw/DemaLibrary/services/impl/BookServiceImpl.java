@@ -61,7 +61,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> getBooksPublishedInYear(String publishedYear) {
+    public List<BookDto> getBooksPublishedInYear(int publishedYear) {
         Iterable<BookEntity> booksPublishedInYearIterable = bookRepository.getBooksPublishedInYear(publishedYear);
 
         return StreamSupport

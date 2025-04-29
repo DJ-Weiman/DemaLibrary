@@ -3,14 +3,12 @@ package com.djw.DemaLibrary.services.impl;
 import com.djw.DemaLibrary.domain.entities.UserEntity;
 import com.djw.DemaLibrary.exception.ValidationException;
 import com.djw.DemaLibrary.repositories.UserRepository;
-import com.djw.DemaLibrary.security.LibraryUserDetails;
 import com.djw.DemaLibrary.services.UserRegistrationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

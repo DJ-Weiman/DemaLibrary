@@ -10,5 +10,5 @@ public interface BookService {
     List<BookDto> getAllAvailableBooks();
     List<BookDto> getAllBooks();
     List<BookDto> getBooksByAuthor(String authorName);
-    List<BookDto> getBooksPublishedInYear(String publishedYear);
+    List<BookDto> getBooksPublishedInYear(int publishedYear);
 }

@@ -1,40 +1,81 @@
 package com.djw.DemaLibrary.services.impl;
 
-import com.djw.DemaLibrary.domain.AuthResponse;
+import com.djw.DemaLibrary.domain.auth.LoginRequest;
+import com.djw.DemaLibrary.domain.auth.LoginResponse;
+import com.djw.DemaLibrary.domain.auth.RegisterRequest;
+import com.djw.DemaLibrary.domain.auth.RegisterResponse;
+import com.djw.DemaLibrary.domain.entities.AuthorityEntity;
+import com.djw.DemaLibrary.domain.entities.UserEntity;
+import com.djw.DemaLibrary.jwt.JwtUtils;
+import com.djw.DemaLibrary.security.LibraryUserDetailsService;
 import com.djw.DemaLibrary.services.AuthenticationService;
 import com.djw.DemaLibrary.services.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
-
-    private final Long jwtExpiryMs = 86400000L;
+    private final LibraryUserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public AuthResponse authenticate(String username, String password) {
-        final var authToken = UsernamePasswordAuthenticationToken.unauthenticated(username, password);
-        final var authentication = authenticationManager.authenticate(authToken);
+    public LoginResponse signInUser(LoginRequest loginRequest) throws AuthenticationException {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+        );
 
-        final var token = jwtService.generateToken(username);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return new AuthResponse(token, jwtExpiryMs);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
+
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+
+        return LoginResponse.builder()
+                .username(userDetails.getUsername())
+                .token(jwtToken)
+                .build();
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
-        return "";
-    }
+    public RegisterResponse registerUser(RegisterRequest registerRequest) {
+        if(userDetailsService.userExists(registerRequest.getUsername()))
+            return null;
 
-    @Override
-    public UserDetails validateToken(String token) {
-        return null;
+        AuthorityEntity authority = AuthorityEntity.builder()
+                .authorityTitle("ROLE_USER")
+                .build();
+
+        UserEntity user = UserEntity.builder()
+                .name(registerRequest.getUsername())
+                .userPassword(passwordEncoder.encode(registerRequest.getPassword()))
+                .created_at(LocalDateTime.now())
+                .authority(authority)
+                .build();
+
+        UserDetails userDetails = userDetailsService.saveUser(user, authority);
+
+        return RegisterResponse.builder()
+                .username(userDetails.getUsername())
+                .email(registerRequest.getEmail())
+                .build();
     }
 }

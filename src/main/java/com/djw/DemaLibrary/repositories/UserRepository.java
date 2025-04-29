@@ -12,5 +12,6 @@ public interface UserRepository extends CrudRepository<UserEntity, UUID> {
 
     Optional<UserEntity> findByName(String name);
 
-    boolean existsByName(String name);
+
+    boolean existsByName(String username);
 }

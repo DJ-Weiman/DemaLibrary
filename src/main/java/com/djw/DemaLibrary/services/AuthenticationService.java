@@ -1,11 +1,12 @@
 package com.djw.DemaLibrary.services;
 
-import com.djw.DemaLibrary.domain.AuthResponse;
-import com.djw.DemaLibrary.domain.dto.UserDto;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.djw.DemaLibrary.domain.auth.LoginRequest;
+import com.djw.DemaLibrary.domain.auth.LoginResponse;
+import com.djw.DemaLibrary.domain.auth.RegisterRequest;
+import com.djw.DemaLibrary.domain.auth.RegisterResponse;
+import org.springframework.security.core.AuthenticationException;
 
 public interface AuthenticationService {
-    AuthResponse authenticate(String username, String password);
-    String generateToken(UserDetails userDetails);
-    UserDetails validateToken(String token);
+    LoginResponse signInUser(LoginRequest loginRequest) throws AuthenticationException;
+    RegisterResponse registerUser(RegisterRequest registerRequest);
 }
