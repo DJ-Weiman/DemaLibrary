@@ -15,5 +15,5 @@ public interface BookRepository extends CrudRepository<BookEntity, UUID> {
     Iterable<BookEntity> getBooksByAuthor(String authorName);
 
     @Query("SELECT b FROM BookEntity b WHERE b.published_year = ?1")
-    Iterable<BookEntity> getBooksPublishedInYear(String publishedYear);
+    Iterable<BookEntity> getBooksPublishedInYear(int publishedYear);
 }

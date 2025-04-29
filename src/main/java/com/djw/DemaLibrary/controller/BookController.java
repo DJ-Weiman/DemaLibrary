@@ -37,7 +37,7 @@ public class BookController {
     }
 
     @GetMapping(path = "/{publishedYear}")
-    public ResponseEntity<List<BookDto>> getBooksFromYear(@PathVariable("publishedYear") String publishedYear){
+    public ResponseEntity<List<BookDto>> getBooksFromYear(@PathVariable("publishedYear") int publishedYear){
         List<BookDto> booksFromPublishedYear = bookService.getBooksPublishedInYear(publishedYear);
         return new ResponseEntity<>(booksFromPublishedYear, HttpStatus.OK);
     }
