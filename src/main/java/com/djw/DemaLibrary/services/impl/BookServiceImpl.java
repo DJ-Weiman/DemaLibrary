@@ -2,6 +2,7 @@ package com.djw.DemaLibrary.services.impl;
 
 import com.djw.DemaLibrary.domain.dto.BookDto;
 import com.djw.DemaLibrary.domain.entities.BookEntity;
+import com.djw.DemaLibrary.exception.InsufficientBookFieldsException;
 import com.djw.DemaLibrary.mappers.Mapper;
 import com.djw.DemaLibrary.repositories.BookRepository;
 import com.djw.DemaLibrary.services.BookService;
@@ -25,6 +26,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto createBook(BookDto bookDto) {
+        if(bookDto.getTitle() == null || bookDto.getAuthor() == null)
+            throw new InsufficientBookFieldsException("Insufficient Data for Book Entity");
+
         BookEntity savedBook = bookRepository.save(bookMapper.mapFrom(bookDto));
 
         return bookMapper.mapTo(savedBook);

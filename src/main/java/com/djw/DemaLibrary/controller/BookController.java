@@ -26,8 +26,14 @@ public class BookController {
 
     @GetMapping()
     public ResponseEntity<List<BookDto>> getAllBooks(){
-        List<BookDto> booksByAuthor = bookService.getAllBooks();
-        return new ResponseEntity<>(booksByAuthor, HttpStatus.OK);
+        List<BookDto> allBooks = bookService.getAllBooks();
+        return new ResponseEntity<>(allBooks, HttpStatus.OK);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<BookDto>> getAllAvailableBooks(){
+        List<BookDto> availableBooks = bookService.getAllAvailableBooks();
+        return new ResponseEntity<>(availableBooks, HttpStatus.OK);
     }
 
     @GetMapping(path = "/{authorName}")
