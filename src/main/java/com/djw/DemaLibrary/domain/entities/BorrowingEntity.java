@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.userdetails.User;
 
-import java.awt.print.Book;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -23,9 +23,13 @@ public class BorrowingEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
+    private BookEntity book;
 
     @Column(nullable = false)
     private LocalDateTime borrowed_at;

@@ -66,6 +66,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         UserEntity user = UserEntity.builder()
                 .name(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
                 .userPassword(passwordEncoder.encode(registerRequest.getPassword()))
                 .created_at(LocalDateTime.now())
                 .authority(authority)
