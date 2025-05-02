@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -27,5 +30,22 @@ public class BookEntity {
 
     private int published_year;
 
+    private int total_copies;
+
     private int available_copies;
+
+    @ManyToMany(mappedBy = "borrowedBooks")
+    private List<UserEntity> borrowers = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        BookEntity that = (BookEntity) o;
+        return published_year == that.published_year && total_copies == that.total_copies && available_copies == that.available_copies && Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(author, that.author) && Objects.equals(borrowers, that.borrowers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, author, published_year, total_copies, available_copies, borrowers);
+    }
 }
