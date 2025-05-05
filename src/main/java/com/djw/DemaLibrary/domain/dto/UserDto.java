@@ -1,53 +1,28 @@
 package com.djw.DemaLibrary.domain.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserDto {
     private UUID id;
+
+    @NotBlank(message = "Username cannot be null")
     private String name;
+
+    @NotBlank(message = "Email cannot be null")
+    @Email(message = "Invalid Email format")
     private String email;
+
     private LocalDateTime created_at;
-
-    public UserDto() {
-    }
-
-    public UserDto(UUID id, String name, String email, LocalDateTime created_at) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.created_at = created_at;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public LocalDateTime getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
-    }
 }
