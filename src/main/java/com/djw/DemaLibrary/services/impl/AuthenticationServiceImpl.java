@@ -12,7 +12,6 @@ import com.djw.DemaLibrary.repositories.AuthorityRepository;
 import com.djw.DemaLibrary.security.LibraryUserDetails;
 import com.djw.DemaLibrary.security.LibraryUserDetailsService;
 import com.djw.DemaLibrary.services.AuthenticationService;
-import com.djw.DemaLibrary.services.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

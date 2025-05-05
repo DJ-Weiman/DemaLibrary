@@ -1,12 +1,13 @@
 package com.djw.DemaLibrary.repositories;
 
 import com.djw.DemaLibrary.domain.entities.BookEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.UUID;
 
-public interface BookRepository extends CrudRepository<BookEntity, UUID> {
+public interface BookRepository extends JpaRepository<BookEntity, UUID> {
 
     @Query("SELECT b FROM BookEntity b WHERE b.available_copies > 0")
     Iterable<BookEntity> findAvailableBooks();
