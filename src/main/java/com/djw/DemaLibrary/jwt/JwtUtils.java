@@ -1,5 +1,6 @@
 package com.djw.DemaLibrary.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtils {
@@ -31,21 +33,22 @@ public class JwtUtils {
         return null;
     }
 
-    public String generateTokenFromUsername(UserDetails userDetails){
+    public String generateTokenFromUsername(UserDetails userDetails, List<String> roles){
         String userName = userDetails.getUsername();
         return Jwts.builder()
                 .subject(userName)
                 .issuedAt(new Date())
+                .claim("roles", roles)
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key())
                 .compact();
     }
 
-    public String getUserNameFromJwtToken(String token){
+    public Claims getDetailsFromJwtToken(String token){
         return Jwts.parser().verifyWith((SecretKey) key())
                 .build()
                 .parseSignedClaims(token)
-                .getPayload().getSubject();
+                .getPayload();
     }
 
     private Key key(){

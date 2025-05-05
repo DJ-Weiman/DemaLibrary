@@ -3,22 +3,24 @@ package com.djw.DemaLibrary.controller;
 import com.djw.DemaLibrary.domain.dto.BookDto;
 import com.djw.DemaLibrary.services.BookService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/library/books")
+@RequiredArgsConstructor
+@EnableMethodSecurity
 public class BookController {
 
     private final BookService bookService;
 
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<BookDto> createBook(@RequestBody @Valid BookDto book){
         BookDto savedBook = bookService.createBook(book);

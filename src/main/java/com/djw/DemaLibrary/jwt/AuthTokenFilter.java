@@ -2,6 +2,7 @@ package com.djw.DemaLibrary.jwt;
 
 import com.djw.DemaLibrary.security.LibraryUserDetails;
 import com.djw.DemaLibrary.security.LibraryUserDetailsService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,8 +33,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try{
             String jwt = parseJwt(request);
             if(jwt != null && jwtUtils.validateJwtToken(jwt)){
-                String username = jwtUtils.getUserNameFromJwtToken(jwt);
-                LibraryUserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                Claims claims = jwtUtils.getDetailsFromJwtToken(jwt);
+                LibraryUserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails,

@@ -18,12 +18,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping()
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
-        UserDto savedUser = userService.createUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-    }
-
     @GetMapping("/me")
     public ResponseEntity<UserDto> getUser(@RequestBody UserDto userDto){
         Optional<UserDto> userDtoOptional = userService.getUserByName(userDto.getName());
