@@ -42,9 +42,9 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/hello/**").permitAll()
                 .requestMatchers("/library/auth/login").permitAll()
                 .requestMatchers("/library/auth/registerUser").permitAll()
+                .requestMatchers(HttpMethod.GET, "/library/books/**").permitAll()
                 .anyRequest().authenticated());
         http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
