@@ -2,6 +2,7 @@ package com.djw.DemaLibrary.controller;
 
 import com.djw.DemaLibrary.domain.dto.BookDto;
 import com.djw.DemaLibrary.services.BookService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class BookController {
     }
 
     @PostMapping()
-    public ResponseEntity<BookDto> createBook(@RequestBody BookDto book){
+    public ResponseEntity<BookDto> createBook(@RequestBody @Valid BookDto book){
         BookDto savedBook = bookService.createBook(book);
         return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
     }
