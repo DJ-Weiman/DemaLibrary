@@ -14,5 +14,4 @@ import java.util.UUID;
 @Builder
 public class BorrowingRequest {
     private UUID book_id;
-    private LocalDateTime borrowed_at;
 }

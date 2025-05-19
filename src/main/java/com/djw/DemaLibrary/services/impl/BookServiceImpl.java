@@ -6,6 +6,7 @@ import com.djw.DemaLibrary.exception.InsufficientBookFieldsException;
 import com.djw.DemaLibrary.mappers.Mapper;
 import com.djw.DemaLibrary.repositories.BookRepository;
 import com.djw.DemaLibrary.services.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Book;
@@ -14,15 +15,11 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final Mapper<BookEntity, BookDto> bookMapper;
-
-    public BookServiceImpl(BookRepository bookRepository, Mapper<BookEntity, BookDto> bookMapper) {
-        this.bookRepository = bookRepository;
-        this.bookMapper = bookMapper;
-    }
 
     @Override
     public BookDto createBook(BookDto bookDto) {

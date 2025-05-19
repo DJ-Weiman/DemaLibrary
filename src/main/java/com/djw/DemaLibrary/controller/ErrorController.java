@@ -1,7 +1,10 @@
 package com.djw.DemaLibrary.controller;
 
 import com.djw.DemaLibrary.domain.dto.ApiErrorResponse;
+import com.djw.DemaLibrary.exception.BookNotAvailableException;
 import com.djw.DemaLibrary.exception.InsufficientBookFieldsException;
+import com.djw.DemaLibrary.exception.UserHasExistingBorrowingException;
+import com.djw.DemaLibrary.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,5 +34,33 @@ public class ErrorController {
                 .build();
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(BookNotAvailableException.class)
+    public ResponseEntity<ApiErrorResponse> handleBookNotAvailableException(BookNotAvailableException ex){
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserHasExistingBorrowingException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserHasExistingBorrowingException(UserHasExistingBorrowingException ex){
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserHasExistingBorrowingException(UserNotFoundException ex){
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
 
 }
