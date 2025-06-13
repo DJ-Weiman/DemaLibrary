@@ -68,6 +68,24 @@ public class BorrowingServiceImpl implements BorrowingService {
                 .build();
     }
 
+    @Override
+    public void checkAndReturnBook(String bookId) {
+        LibraryUserDetails userDetails = (LibraryUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(!checkIfUserHasExistingBorrowing(userDetails.getUser()))
+            throw new UserHasExistingBorrowingException("Borrowing does not exist for user");
+
+        BookEntity borrowedBook = getBookForGivenID(UUID.fromString(bookId));
+        UserEntity currentUser = getUserForGivenId(userDetails.getId());
+
+        BorrowingEntity borrowingEntity = borrowingRepository.getByUserAndBook(currentUser, borrowedBook);
+        borrowingEntity.setReturned_at(LocalDateTime.now());
+        borrowingRepository.save(borrowingEntity);
+
+        borrowedBook.setAvailable_copies(borrowedBook.getAvailable_copies() + 1);
+        bookRepository.save(borrowedBook);
+    }
+
     private boolean checkIfUserHasExistingBorrowing(UserEntity user){
         return borrowingRepository.existsByUserAndReturnDateIsNull(user);
     }

@@ -5,4 +5,5 @@ import com.djw.DemaLibrary.domain.dto.BorrowingResponse;
 
 public interface BorrowingService {
     BorrowingResponse checkAndBorrowBook(BorrowingRequest borrowingRequest);
+    void checkAndReturnBook(String bookId);
 }
