@@ -7,7 +7,7 @@ import com.djw.DemaLibrary.domain.auth.RegisterResponse;
 import com.djw.DemaLibrary.domain.entities.AuthorityEntity;
 import com.djw.DemaLibrary.domain.entities.UserEntity;
 import com.djw.DemaLibrary.exception.AuthorityNotFoundException;
-import com.djw.DemaLibrary.jwt.JwtUtils;
+import com.djw.DemaLibrary.security.jwt.JwtUtils;
 import com.djw.DemaLibrary.repositories.AuthorityRepository;
 import com.djw.DemaLibrary.security.LibraryUserDetails;
 import com.djw.DemaLibrary.security.LibraryUserDetailsService;

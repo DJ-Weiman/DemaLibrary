@@ -1,4 +1,4 @@
-package com.djw.DemaLibrary.jwt;
+package com.djw.DemaLibrary.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

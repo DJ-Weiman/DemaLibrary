@@ -1,4 +1,4 @@
-package com.djw.DemaLibrary.jwt;
+package com.djw.DemaLibrary.security.jwt;
 
 import com.djw.DemaLibrary.security.LibraryUserDetails;
 import com.djw.DemaLibrary.security.LibraryUserDetailsService;

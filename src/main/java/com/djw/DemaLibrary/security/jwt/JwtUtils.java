@@ -1,4 +1,4 @@
-package com.djw.DemaLibrary.jwt;
+package com.djw.DemaLibrary.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
