@@ -1,5 +1,6 @@
 package com.djw.DemaLibrary.repositories;
 
+import com.djw.DemaLibrary.domain.entities.BookEntity;
 import com.djw.DemaLibrary.domain.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
@@ -15,4 +16,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByName(String name);
 
     boolean existsByName(String username);
+
+    Optional<BookEntity> getBorrowedBooksById(UUID userId);
 }

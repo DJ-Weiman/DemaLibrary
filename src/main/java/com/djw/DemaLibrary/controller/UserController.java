@@ -15,7 +15,6 @@ import java.util.Optional;
 @RequestMapping(path = "/library/users")
 @RequiredArgsConstructor
 public class UserController {
-
     private final UserService userService;
 
     @GetMapping("/me")

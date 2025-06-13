@@ -1,9 +1,9 @@
-services:
-  # Our PostgreSQL database
-  db:
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: changemeinprod!
+#services:
+#  # Our PostgreSQL database
+#  db:
+#    image: postgres:latest
+#    ports:
+#      - "5432:5432"
+#    restart: always
+#    environment:
+#      POSTGRES_PASSWORD: changemeinprod!
