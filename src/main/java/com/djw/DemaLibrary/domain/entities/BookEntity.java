@@ -28,6 +28,14 @@ public class BookEntity {
 
     private String author;
 
+    private String genre;
+
+    private float rating;
+
+    private String summary;
+
+    private String coverUrl;
+
     private int published_year;
 
     private int total_copies;
@@ -41,11 +49,11 @@ public class BookEntity {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         BookEntity that = (BookEntity) o;
-        return published_year == that.published_year && total_copies == that.total_copies && available_copies == that.available_copies && Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(author, that.author) && Objects.equals(borrowers, that.borrowers);
+        return Float.compare(rating, that.rating) == 0 && published_year == that.published_year && total_copies == that.total_copies && available_copies == that.available_copies && Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(author, that.author) && Objects.equals(genre, that.genre) && Objects.equals(summary, that.summary) && Objects.equals(coverUrl, that.coverUrl) && Objects.equals(borrowers, that.borrowers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, published_year, total_copies, available_copies, borrowers);
+        return Objects.hash(id, title, author, genre, rating, summary, coverUrl, published_year, total_copies, available_copies, borrowers);
     }
 }
