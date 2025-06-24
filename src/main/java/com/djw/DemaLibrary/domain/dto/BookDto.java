@@ -16,13 +16,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class BookDto {
-    private UUID id;
 
     @NotBlank(message = "Please provide a valid title for Book")
     private String title;
 
     @NotBlank(message = "Please provide a valid author for Book")
     private String author;
+
+    private String genre;
+
+    private String coverUrl;
+
+    private float rating;
+
+    private String summary;
 
     @NotNull(message = "Please provide a valid published year")
     @Min(value = 0, message = "Published year has to be greater than 0")
@@ -31,5 +38,6 @@ public class BookDto {
 
     @NotNull(message = "Min copies cannot be null")
     @Min(value = 0, message = "Min available copies cannot be less than zero")
-    private int available_copies;
+    private int total_copies;
+
 }

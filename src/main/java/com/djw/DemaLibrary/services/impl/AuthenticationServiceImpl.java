@@ -10,7 +10,6 @@ import com.djw.DemaLibrary.exception.AuthorityNotFoundException;
 import com.djw.DemaLibrary.security.jwt.JwtUtils;
 import com.djw.DemaLibrary.exception.EmailNotUniqueException;
 import com.djw.DemaLibrary.exception.UsernameNotUniqueException;
-import com.djw.DemaLibrary.jwt.JwtUtils;
 import com.djw.DemaLibrary.repositories.AuthorityRepository;
 import com.djw.DemaLibrary.repositories.UserRepository;
 import com.djw.DemaLibrary.security.LibraryUserDetails;

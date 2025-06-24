@@ -32,6 +32,7 @@ public class BookEntity {
 
     private float rating;
 
+    @Column(columnDefinition = "TEXT")
     private String summary;
 
     private String coverUrl;
