@@ -8,5 +8,5 @@ import org.springframework.security.core.AuthenticationException;
 
 public interface AuthenticationService {
     LoginResponse signInUser(LoginRequest loginRequest) throws AuthenticationException;
-    RegisterResponse registerUser(RegisterRequest registerRequest);
+    void registerUser(RegisterRequest registerRequest);
 }

@@ -2,8 +2,7 @@ package com.djw.DemaLibrary.domain.auth;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
