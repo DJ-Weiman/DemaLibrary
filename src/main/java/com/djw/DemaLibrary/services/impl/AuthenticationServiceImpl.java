@@ -8,17 +8,23 @@ import com.djw.DemaLibrary.domain.entities.AuthorityEntity;
 import com.djw.DemaLibrary.domain.entities.UserEntity;
 import com.djw.DemaLibrary.exception.AuthorityNotFoundException;
 import com.djw.DemaLibrary.security.jwt.JwtUtils;
+import com.djw.DemaLibrary.exception.EmailNotUniqueException;
+import com.djw.DemaLibrary.exception.UsernameNotUniqueException;
+import com.djw.DemaLibrary.jwt.JwtUtils;
 import com.djw.DemaLibrary.repositories.AuthorityRepository;
+import com.djw.DemaLibrary.repositories.UserRepository;
 import com.djw.DemaLibrary.security.LibraryUserDetails;
 import com.djw.DemaLibrary.security.LibraryUserDetailsService;
 import com.djw.DemaLibrary.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +38,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
-    private final LibraryUserDetailsService userDetailsService;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
+
+    @Override
+    public void registerUser(RegisterRequest registerRequest) {
+        if(userRepository.existsByName(registerRequest.getUsername()))
+            throw new UsernameNotUniqueException("Username already exists, please try another");
+
+        if(userRepository.existsByEmail(registerRequest.getEmail()))
+            throw new EmailNotUniqueException("Email already exists, please try another");
+
+        AuthorityEntity authority = authorityRepository.getByAuthorityTitle("ROLE_USER").orElseThrow(() ->
+                new AuthorityNotFoundException("Default Authority User Role not found in DB"));
+
+        UserEntity user = UserEntity.builder()
+                .name(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
+                .userPassword(passwordEncoder.encode(registerRequest.getPassword()))
+                .created_at(LocalDateTime.now())
+                .authority(authority)
+                .build();
+
+        userRepository.save(user);
+    }
 
     @Override
     public LoginResponse signInUser(LoginRequest loginRequest) throws AuthenticationException {
@@ -59,27 +87,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    @Override
-    public RegisterResponse registerUser(RegisterRequest registerRequest) {
-        if(userDetailsService.userExists(registerRequest.getUsername()))
-            return null;
 
-        AuthorityEntity authority = authorityRepository.getByAuthorityTitle("ROLE_USER").orElseThrow(() ->
-                new AuthorityNotFoundException("Default Authority User Role not found in DB"));
-
-        UserEntity user = UserEntity.builder()
-                .name(registerRequest.getUsername())
-                .email(registerRequest.getEmail())
-                .userPassword(passwordEncoder.encode(registerRequest.getPassword()))
-                .created_at(LocalDateTime.now())
-                .authority(authority)
-                .build();
-
-        UserDetails userDetails = userDetailsService.saveUser(user);
-
-        return RegisterResponse.builder()
-                .username(userDetails.getUsername())
-                .email(registerRequest.getEmail())
-                .build();
-    }
 }

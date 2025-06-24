@@ -22,10 +22,6 @@ public class LibraryUserDetailsService implements UserDetailsService {
         return new LibraryUserDetails(user);
     }
 
-    public boolean userExists(String username){
-        return userRepository.existsByName(username);
-    }
-
     public LibraryUserDetails saveUser(UserEntity user){
         UserEntity savedUser = userRepository.save(user);
 

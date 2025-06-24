@@ -59,8 +59,8 @@ public class ErrorController {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserNotBorrowedBookException.class)
-    public ResponseEntity<ApiErrorResponse> handleUserNOtBorrowedBookException(UserNotBorrowedBookException ex){
+    @ExceptionHandler(UsernameNotUniqueException.class)
+    public ResponseEntity<ApiErrorResponse> handleUsernameNotUniqueException(UsernameNotUniqueException ex){
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(ex.getMessage())
@@ -68,4 +68,12 @@ public class ErrorController {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(EmailNotUniqueException.class)
+    public ResponseEntity<ApiErrorResponse> handleEmailNotUniqueException(EmailNotUniqueException ex){
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }

@@ -38,15 +38,7 @@ public class AuthController {
 
     @PostMapping("/registerUser")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest){
-        RegisterResponse registerResponse = authService.registerUser(registerRequest);
-
-        if(registerResponse == null){
-            Map<String, Object> map = new HashMap<>();
-            map.put("message", "Bad Credentials");
-            map.put("status", false);
-            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
-        }
-
-        return ResponseEntity.ok(registerResponse);
+        authService.registerUser(registerRequest);
+        return ResponseEntity.ok().build();
     }
 }
