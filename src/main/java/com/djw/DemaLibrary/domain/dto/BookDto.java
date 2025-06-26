@@ -4,6 +4,7 @@ import com.djw.DemaLibrary.validation.PastOrPresentYear;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class BookDto {
+
+    @Null
+    private UUID id;
 
     @NotBlank(message = "Please provide a valid title for Book")
     private String title;
@@ -39,5 +43,8 @@ public class BookDto {
     @NotNull(message = "Min copies cannot be null")
     @Min(value = 0, message = "Min available copies cannot be less than zero")
     private int total_copies;
+
+    @Null
+    private int available_copies;
 
 }

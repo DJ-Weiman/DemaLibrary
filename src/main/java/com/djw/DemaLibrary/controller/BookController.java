@@ -4,13 +4,18 @@ import com.djw.DemaLibrary.domain.dto.BookDto;
 import com.djw.DemaLibrary.services.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/library/books")
@@ -27,9 +32,17 @@ public class BookController {
         return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BookDto> getBookById(@PathVariable String id){
+        Optional<BookDto> retrievedBookOptional = bookService.getBookById(id);
+
+        return retrievedBookOptional.map(bookDto -> new ResponseEntity<>(bookDto, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping()
-    public ResponseEntity<List<BookDto>> getAllBooks(){
-        List<BookDto> allBooks = bookService.getAllBooks();
+    public ResponseEntity<Page<BookDto>> getAllBooks(Pageable pageable){
+        Page<BookDto> allBooks = bookService.getAllBooks(pageable);
         return new ResponseEntity<>(allBooks, HttpStatus.OK);
     }
 

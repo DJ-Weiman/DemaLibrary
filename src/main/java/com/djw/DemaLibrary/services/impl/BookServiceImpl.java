@@ -7,10 +7,13 @@ import com.djw.DemaLibrary.mappers.Mapper;
 import com.djw.DemaLibrary.repositories.BookRepository;
 import com.djw.DemaLibrary.services.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Book;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -32,13 +35,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> getAllBooks() {
-        Iterable<BookEntity> allBooksIterable = bookRepository.findAll();
+    public Page<BookDto> getAllBooks(Pageable pageable) {
+        Page<BookEntity> bookEntityPage = bookRepository.findAll(pageable);
 
-        return StreamSupport
-                .stream(allBooksIterable.spliterator(), false)
-                .map(bookMapper::mapTo)
-                .collect(Collectors.toList());
+        return  bookEntityPage.map(bookMapper::mapTo);
+    }
+
+    @Override
+    public Optional<BookDto> getBookById(String id) {
+        Optional<BookEntity> bookOptional = bookRepository.getBookById(UUID.fromString(id));
+        return bookOptional.map(bookMapper::mapTo);
     }
 
     @Override
