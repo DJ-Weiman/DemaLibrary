@@ -7,6 +7,6 @@ import com.djw.DemaLibrary.domain.auth.RegisterResponse;
 import org.springframework.security.core.AuthenticationException;
 
 public interface AuthenticationService {
-    LoginResponse signInUser(LoginRequest loginRequest) throws AuthenticationException;
+    LoginResponse signInUser(LoginRequest loginRequest);
     void registerUser(RegisterRequest registerRequest);
 }

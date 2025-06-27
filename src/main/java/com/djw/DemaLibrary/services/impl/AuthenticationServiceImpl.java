@@ -49,8 +49,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(userRepository.existsByEmail(registerRequest.getEmail()))
             throw new EmailNotUniqueException("Email already exists, please try another");
 
-        AuthorityEntity authority = authorityRepository.getByAuthorityTitle("ROLE_USER").orElseThrow(() ->
-                new AuthorityNotFoundException("Default Authority User Role not found in DB"));
+//        AuthorityEntity authority = authorityRepository.getByAuthorityTitle("ROLE_USER").orElse(() ->
+//                new AuthorityNotFoundException("Default Authority User Role not found in DB"));
+
+        AuthorityEntity authority = authorityRepository.getByAuthorityTitle("ROLE_USER").orElseGet(() -> {
+            AuthorityEntity newAuthority = AuthorityEntity.builder().authorityTitle("ROLE_USER").build();
+            return authorityRepository.save(newAuthority);
+        });
 
         UserEntity user = UserEntity.builder()
                 .name(registerRequest.getUsername())
@@ -64,7 +69,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public LoginResponse signInUser(LoginRequest loginRequest) throws AuthenticationException {
+    public LoginResponse signInUser(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
         );
@@ -76,7 +81,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-
 
         String jwtToken = jwtUtils.generateTokenFromUsername(userDetails, roles);
 

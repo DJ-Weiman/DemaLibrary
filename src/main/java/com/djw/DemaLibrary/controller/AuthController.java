@@ -22,18 +22,9 @@ public class AuthController {
     private final AuthenticationService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
-        LoginResponse loginResponse;
-        try {
-            loginResponse = authService.signInUser(loginRequest);
-        }catch (AuthenticationException exception){
-            Map<String, Object> map = new HashMap<>();
-            map.put("message", "Bad Credentials");
-            map.put("status", false);
-            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
-        }
-
-        return ResponseEntity.ok(loginResponse);
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest){
+        LoginResponse loginResponse = authService.signInUser(loginRequest);
+        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
     @PostMapping("/registerUser")
