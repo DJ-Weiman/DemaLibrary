@@ -30,7 +30,6 @@ public class BookServiceImpl implements BookService {
             throw new InsufficientBookFieldsException("Insufficient Data for Book Entity");
 
         BookEntity savedBook = bookRepository.save(bookMapper.mapFrom(bookDto));
-
         return bookMapper.mapTo(savedBook);
     }
 
@@ -49,32 +48,37 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> getAllAvailableBooks() {
-        Iterable<BookEntity> availableBookIterable = bookRepository.findAvailableBooks();
+        List<BookEntity> availableBooks = bookRepository.findAvailableBooks();
 
-        return StreamSupport
-                .stream(availableBookIterable.spliterator(), false)
+        return availableBooks
+                .stream()
                 .map(bookMapper::mapTo)
-                .collect(Collectors.toList());
+                .toList();
+
+//        return StreamSupport
+//                .stream(availableBookIterable.spliterator(), false)
+//                .map(bookMapper::mapTo)
+//                .collect(Collectors.toList());
     }
 
     @Override
     public List<BookDto> getBooksByAuthor(String authorName) {
-        Iterable<BookEntity> booksByAuthorIterable = bookRepository.getBooksByAuthor(authorName);
+        List<BookEntity> booksByAuthor = bookRepository.getBooksByAuthor(authorName);
 
-        return StreamSupport
-                .stream(booksByAuthorIterable.spliterator(), false)
+        return booksByAuthor
+                .stream()
                 .map(bookMapper::mapTo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public List<BookDto> getBooksPublishedInYear(int publishedYear) {
-        Iterable<BookEntity> booksPublishedInYearIterable = bookRepository.getBooksPublishedInYear(publishedYear);
+        List<BookEntity> booksPublishedInYear = bookRepository.getBooksPublishedInYear(publishedYear);
 
-        return StreamSupport
-                .stream(booksPublishedInYearIterable.spliterator(), false)
+        return booksPublishedInYear
+                .stream()
                 .map(bookMapper::mapTo)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 

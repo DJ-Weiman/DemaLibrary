@@ -2,10 +2,7 @@ package com.djw.DemaLibrary.domain.entities;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +11,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name ="books")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class BookEntity {
 
     @Id
