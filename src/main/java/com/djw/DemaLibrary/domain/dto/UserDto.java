@@ -10,19 +10,21 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
-    private UUID id;
-
     @NotBlank(message = "Username cannot be null")
     private String name;
 
-    @NotBlank(message = "Email cannot be null")
-    @Email(message = "Invalid Email format")
     private String email;
 
-    private LocalDateTime created_at;
+    private String registered_date;
+
+    private Integer current_borrow_count;
+
+    private Integer past_borrow_count;
+
+    private Integer remaining_borrow_count;
 }

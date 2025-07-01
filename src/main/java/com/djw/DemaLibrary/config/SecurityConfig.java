@@ -38,7 +38,9 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((requests) -> requests
+                .requestMatchers(HttpMethod.OPTIONS, "/library/users/me").permitAll()
                 .requestMatchers("/library/auth/login").permitAll()
                 .requestMatchers("/library/auth/registerUser").permitAll()
                 .requestMatchers(HttpMethod.GET, "/library/books/**").permitAll()
@@ -48,7 +50,6 @@ public class SecurityConfig {
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));
         http.headers(headers ->
                 headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
-        http.csrf(AbstractHttpConfigurer::disable);
         http.addFilterBefore(authenticationJwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -19,10 +19,8 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> getUser(@RequestBody UserDto userDto){
-        Optional<UserDto> userDtoOptional = userService.getUserByName(userDto.getName());
-
-        return userDtoOptional.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        UserDto user = userService.getUserByName(userDto.getName());
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping

@@ -5,6 +5,8 @@ import com.djw.DemaLibrary.domain.entities.UserEntity;
 import com.djw.DemaLibrary.mappers.Mapper;
 import com.djw.DemaLibrary.repositories.UserRepository;
 import com.djw.DemaLibrary.services.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,23 +16,12 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final Mapper<UserEntity, UserDto> userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, Mapper<UserEntity, UserDto> userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
-
-    @Override
-    public UserDto createUser(UserDto userDto) {
-        userDto.setCreated_at(LocalDateTime.now());
-        UserEntity savedUser = userRepository.save(userMapper.mapFrom(userDto));
-
-        return userMapper.mapTo(savedUser);
-    }
 
     @Override
     public List<UserDto> getAllUsers() {
@@ -41,8 +32,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> getUserByName(String userName) {
-        Optional<UserEntity> optionalUserEntity = userRepository.findByName(userName);
-        return optionalUserEntity.map(userMapper::mapTo);
+    public UserDto getUserByName(String userName) {
+        UserEntity userEntity = userRepository.findByName(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("No User found with name"));
+
+        return UserDto.builder()
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .registered_date(userEntity.getCreated_at().toString())
+                .past_borrow_count(5)
+                .current_borrow_count(2)
+                .remaining_borrow_count(1)
+                .build();
+
     }
+
+//    private int getPastBorrowCount(){
+//
+//    }
 }

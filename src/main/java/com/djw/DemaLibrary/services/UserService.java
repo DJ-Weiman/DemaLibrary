@@ -8,10 +8,8 @@ import java.util.Optional;
 
 public interface UserService {
 
-    UserDto createUser(UserDto user);
-
     List<UserDto> getAllUsers();
 
-    Optional<UserDto> getUserByName(String userName);
+    UserDto getUserByName(String userName);
 
 }
