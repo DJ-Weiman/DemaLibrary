@@ -17,9 +17,9 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/me")
-    public ResponseEntity<UserDto> getUser(@RequestBody UserDto userDto){
-        UserDto user = userService.getUserByName(userDto.getName());
+    @GetMapping("/me/{username}")
+    public ResponseEntity<UserDto> getUser(@PathVariable("username") String username){
+        UserDto user = userService.getUserByName(username);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

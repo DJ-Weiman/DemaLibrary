@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
         return UserDto.builder()
                 .name(userEntity.getName())
                 .email(userEntity.getEmail())
-                .registered_date(userEntity.getCreated_at().toString())
+                .registered_date(userEntity.getCreated_at().toLocalDate().toString())
                 .past_borrow_count(5)
                 .current_borrow_count(2)
                 .remaining_borrow_count(1)

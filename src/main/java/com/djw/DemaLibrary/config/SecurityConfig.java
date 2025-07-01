@@ -38,9 +38,9 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests((requests) -> requests
-                .requestMatchers(HttpMethod.OPTIONS, "/library/users/me").permitAll()
+        http.csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests((requests) -> requests
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/library/auth/login").permitAll()
                 .requestMatchers("/library/auth/registerUser").permitAll()
                 .requestMatchers(HttpMethod.GET, "/library/books/**").permitAll()
