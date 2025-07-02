@@ -8,6 +8,7 @@ import com.djw.DemaLibrary.domain.entities.BookEntity;
 import com.djw.DemaLibrary.domain.entities.BorrowingEntity;
 import com.djw.DemaLibrary.domain.entities.UserEntity;
 import com.djw.DemaLibrary.exception.BookNotAvailableException;
+import com.djw.DemaLibrary.exception.UserExceededBorrowingLimitException;
 import com.djw.DemaLibrary.exception.UserHasExistingBorrowingException;
 import com.djw.DemaLibrary.exception.UserNotFoundException;
 import com.djw.DemaLibrary.mappers.impl.BookMapper;
@@ -16,6 +17,7 @@ import com.djw.DemaLibrary.repositories.BorrowingRepository;
 import com.djw.DemaLibrary.repositories.UserRepository;
 import com.djw.DemaLibrary.security.LibraryUserDetails;
 import com.djw.DemaLibrary.services.BorrowingService;
+import com.djw.DemaLibrary.utils.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,17 +45,20 @@ public class BorrowingServiceImpl implements BorrowingService {
     public BorrowingResponse checkAndBorrowBook(BorrowingRequest borrowingRequest) {
         Integer availableCount = bookRepository.getAvailableCopiesOfBook(borrowingRequest.getBook_id()).orElse(0);
         LibraryUserDetails userDetails = (LibraryUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        BookEntity bookToBorrow = getBookForGivenID(borrowingRequest.getBook_id());
+        UserEntity currentUser = userDetails.getUser();
 
         if(availableCount == 0)
             throw new BookNotAvailableException("No available copies for given Book");
 
-        if(checkIfUserHasExistingBorrowing(userDetails.getUser()))
+        if(checkIfUserHasExistingBorrowing(currentUser, bookToBorrow))
             throw new UserHasExistingBorrowingException("User already has existing borrowing");
+
+        if(getUserCurrentBorrowCount(currentUser.getId()) > Constants.BORROWING_LIMIT)
+            throw new UserExceededBorrowingLimitException("User Borrowing Limit Exceeded");
 
         LocalDateTime borrowDate = LocalDateTime.now();
         LocalDateTime dueDate = borrowDate.plusDays(14);
-        BookEntity bookToBorrow = getBookForGivenID(borrowingRequest.getBook_id());
-        UserEntity currentUser = getUserForGivenId(userDetails.getId());
 
         BorrowingEntity borrowingEntity = BorrowingEntity.builder()
                 .user(userDetails.getUser())
@@ -78,8 +83,8 @@ public class BorrowingServiceImpl implements BorrowingService {
     public void checkAndReturnBook(String bookId) {
         LibraryUserDetails userDetails = (LibraryUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(!checkIfUserHasExistingBorrowing(userDetails.getUser()))
-            throw new UserHasExistingBorrowingException("Borrowing does not exist for user");
+//        if(!checkIfUserHasExistingBorrowing(userDetails.getUser()))
+//            throw new UserHasExistingBorrowingException("Borrowing does not exist for user");
 
         BookEntity borrowedBook = getBookForGivenID(UUID.fromString(bookId));
         UserEntity currentUser = getUserForGivenId(userDetails.getId());
@@ -103,8 +108,12 @@ public class BorrowingServiceImpl implements BorrowingService {
         }).orElse(Collections.emptyList());
     }
 
-    private boolean checkIfUserHasExistingBorrowing(UserEntity user){
-        return borrowingRepository.existsByUserAndReturnDateIsNull(user);
+    private boolean checkIfUserHasExistingBorrowing(UserEntity user, BookEntity book){
+        return !borrowingRepository.getOngoingBorrowingForUserAndBook(user.getId(), book.getId()).isEmpty();
+    }
+
+    private int getUserCurrentBorrowCount(UUID userID){
+        return borrowingRepository.getCurrentBorrowCountForUser(userID);
     }
 
     private BookEntity getBookForGivenID(UUID bookId){
