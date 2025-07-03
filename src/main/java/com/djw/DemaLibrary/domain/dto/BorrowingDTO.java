@@ -9,8 +9,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class BorrowingDTO {
+    String id;
     String title;
     String author;
+    String coverUrl;
     String borrowed_at;
     String return_date;
     String returned_at;

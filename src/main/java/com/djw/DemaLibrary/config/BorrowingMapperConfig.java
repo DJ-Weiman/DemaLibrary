@@ -21,6 +21,7 @@ public class BorrowingMapperConfig {
                     mapper.map(BorrowingEntity::getBorrowed_at, BorrowingDTO::setBorrowed_at);
                     mapper.map(BorrowingEntity::getReturnDate, BorrowingDTO::setReturn_date);
                     mapper.map(BorrowingEntity::getReturned_at, BorrowingDTO::setReturned_at);
+                    mapper.map(src -> src.getBook().getCoverUrl(), BorrowingDTO::setCoverUrl);
                 });
     }
 }

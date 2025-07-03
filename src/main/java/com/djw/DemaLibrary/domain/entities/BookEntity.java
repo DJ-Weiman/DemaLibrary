@@ -39,7 +39,7 @@ public class BookEntity {
 
     private int available_copies;
 
-    @ManyToMany(mappedBy = "borrowedBooks")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "borrowedBooks")
     private List<UserEntity> borrowers = new ArrayList<>();
 
     @Override

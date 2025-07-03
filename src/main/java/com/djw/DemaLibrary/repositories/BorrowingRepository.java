@@ -23,6 +23,6 @@ public interface BorrowingRepository extends JpaRepository<BorrowingEntity, UUID
 //    List<UserBorrowing> getBorrowingDetailsForUser(UUID userId);
 
 
-    @Query("SELECT b FROM BorrowingEntity b WHERE b.user.id=?1")
+    @Query("SELECT b FROM BorrowingEntity b WHERE b.user.id=?1 ORDER BY b.borrowed_at DESC")
     List<BorrowingEntity> getBorrowingsForUser(UUID userId);
 }

@@ -38,7 +38,7 @@ public class UserEntity {
     @JoinColumn(name = "authority_id", nullable = false)
     private AuthorityEntity authority;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_borrowed_books",
             joinColumns = @JoinColumn(name = "user_id"),
