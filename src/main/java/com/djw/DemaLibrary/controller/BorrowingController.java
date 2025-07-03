@@ -1,8 +1,8 @@
 package com.djw.DemaLibrary.controller;
 
-import com.djw.DemaLibrary.domain.dto.BookDto;
 import com.djw.DemaLibrary.domain.dto.BorrowingRequest;
 import com.djw.DemaLibrary.domain.dto.BorrowingResponse;
+import com.djw.DemaLibrary.domain.dto.BorrowingDTO;
 import com.djw.DemaLibrary.services.BorrowingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,9 +30,9 @@ public class BorrowingController {
         return ResponseEntity.ok("Book Returned Successfully");
     }
 
-    @GetMapping("/pastBookings")
-    public ResponseEntity<List<BookDto>> getPastBookingsForUser(){
-        List<BookDto> pastBookings = borrowingService.getPastBookings();
+    @GetMapping("/pastBorrowings")
+    public ResponseEntity<List<BorrowingDTO>> getPastBookingsForUser(){
+        List<BorrowingDTO> pastBookings = borrowingService.getPastBookings();
         return new ResponseEntity<>(pastBookings, HttpStatus.OK);
     }
 

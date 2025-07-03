@@ -1,9 +1,8 @@
 package com.djw.DemaLibrary.services.impl;
 
-import com.djw.DemaLibrary.config.SecurityConfig;
-import com.djw.DemaLibrary.domain.dto.BookDto;
 import com.djw.DemaLibrary.domain.dto.BorrowingRequest;
 import com.djw.DemaLibrary.domain.dto.BorrowingResponse;
+import com.djw.DemaLibrary.domain.dto.BorrowingDTO;
 import com.djw.DemaLibrary.domain.entities.BookEntity;
 import com.djw.DemaLibrary.domain.entities.BorrowingEntity;
 import com.djw.DemaLibrary.domain.entities.UserEntity;
@@ -12,6 +11,7 @@ import com.djw.DemaLibrary.exception.UserExceededBorrowingLimitException;
 import com.djw.DemaLibrary.exception.UserHasExistingBorrowingException;
 import com.djw.DemaLibrary.exception.UserNotFoundException;
 import com.djw.DemaLibrary.mappers.impl.BookMapper;
+import com.djw.DemaLibrary.mappers.impl.BorrowingMapper;
 import com.djw.DemaLibrary.repositories.BookRepository;
 import com.djw.DemaLibrary.repositories.BorrowingRepository;
 import com.djw.DemaLibrary.repositories.UserRepository;
@@ -19,17 +19,12 @@ import com.djw.DemaLibrary.security.LibraryUserDetails;
 import com.djw.DemaLibrary.services.BorrowingService;
 import com.djw.DemaLibrary.utils.Constants;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +33,7 @@ public class BorrowingServiceImpl implements BorrowingService {
     private final BookRepository bookRepository;
     private final BorrowingRepository borrowingRepository;
     private final UserRepository userRepository;
-    private final BookMapper bookMapper;
+    private final BorrowingMapper borrowingMapper;
 
     @Override
     @Transactional
@@ -98,14 +93,11 @@ public class BorrowingServiceImpl implements BorrowingService {
     }
 
     @Override
-    public List<BookDto> getPastBookings() {
+    public List<BorrowingDTO> getPastBookings() {
         LibraryUserDetails userDetails = (LibraryUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<BorrowingEntity> borrowingEntities = borrowingRepository.getBorrowingsForUser(userDetails.getId());
+        return borrowingEntities.stream().map(borrowingMapper::mapTo).toList();
 
-        Optional<BookEntity> borrowedBooksById = userRepository.getBorrowedBooksById(userDetails.getId());
-
-        return borrowedBooksById.map(bookEntity -> {
-            return Collections.singletonList(bookMapper.mapTo(bookEntity));
-        }).orElse(Collections.emptyList());
     }
 
     private boolean checkIfUserHasExistingBorrowing(UserEntity user, BookEntity book){

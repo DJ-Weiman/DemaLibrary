@@ -1,5 +1,6 @@
 package com.djw.DemaLibrary.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,7 +38,7 @@ public class UserEntity {
     @JoinColumn(name = "authority_id", nullable = false)
     private AuthorityEntity authority;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_borrowed_books",
             joinColumns = @JoinColumn(name = "user_id"),
