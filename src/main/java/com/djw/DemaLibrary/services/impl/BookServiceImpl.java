@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -81,5 +82,9 @@ public class BookServiceImpl implements BookService {
                 .toList();
     }
 
-
+    @Override
+    public Page<BookDto> getBooksForSearchParam(String searchParam, Pageable pageable) {
+        Page<BookEntity> queriedBooksPage = bookRepository.getBooksBySearchParam(searchParam.toLowerCase(Locale.ROOT), pageable);
+        return queriedBooksPage.map(bookMapper::mapTo);
+    }
 }

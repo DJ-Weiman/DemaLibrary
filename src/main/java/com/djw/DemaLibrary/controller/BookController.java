@@ -32,7 +32,7 @@ public class BookController {
         return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<BookDto> getBookById(@PathVariable String id){
         Optional<BookDto> retrievedBookOptional = bookService.getBookById(id);
 
@@ -61,6 +61,12 @@ public class BookController {
     @GetMapping(path = "publishedYear/{publishedYear}")
     public ResponseEntity<List<BookDto>> getBooksFromYear(@PathVariable("publishedYear") int publishedYear){
         List<BookDto> booksFromPublishedYear = bookService.getBooksPublishedInYear(publishedYear);
+        return new ResponseEntity<>(booksFromPublishedYear, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/search")
+    public ResponseEntity<Page<BookDto>> getBooksForSearchParam(@RequestParam("searchParam") String searchParam, Pageable page){
+        Page<BookDto> booksFromPublishedYear = bookService.getBooksForSearchParam(searchParam, page);
         return new ResponseEntity<>(booksFromPublishedYear, HttpStatus.OK);
     }
 }

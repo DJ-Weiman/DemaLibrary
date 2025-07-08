@@ -15,4 +15,5 @@ public interface BookService {
     Optional<BookDto> getBookById(String id);
     List<BookDto> getBooksByAuthor(String authorName);
     List<BookDto> getBooksPublishedInYear(int publishedYear);
+    Page<BookDto> getBooksForSearchParam(String searchParam, Pageable pageable);
 }

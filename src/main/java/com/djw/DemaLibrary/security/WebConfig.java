@@ -11,8 +11,8 @@ import java.util.List;
 @Configuration
 public class WebConfig {
 
-//    @Value("${frontend.url}")
-    private String frontendUrl = "http://localhost:3000";
+    @Value("${frontend.url}")
+    private String frontendUrl;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
